@@ -1,0 +1,15 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    max-width: 900px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+footer {
+    color: white;
+}

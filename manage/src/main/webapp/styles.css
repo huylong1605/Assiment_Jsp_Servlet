@@ -1,0 +1,29 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.jumbotron {
+    background: #007bff;
+    color: white;
+}
+
+.jumbotron .btn {
+    background: #0056b3;
+    border: none;
+}
+
+.section {
+    padding: 60px 0;
+}
+
+.section h2 {
+    margin-bottom: 30px;
+}
+
+footer {
+    background: #f8f9fa;
+}
+
+footer p {
+    margin: 0;
+}
