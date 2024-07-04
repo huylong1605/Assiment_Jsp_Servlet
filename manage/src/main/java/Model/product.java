@@ -31,6 +31,14 @@ public class product {
         this.description = description;
     }
 
+    public product(int product_id, String product_name, double price, String description, Date created_at) {
+        this.product_id =product_id;
+        this.product_name = product_name;
+        this.price = price;
+        this.description = description;
+        this.created_at = created_at;
+    }
+
     public int getProduct_id() {
         return product_id;
     }

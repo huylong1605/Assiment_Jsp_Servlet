@@ -54,7 +54,7 @@
                 <a href="checkPhone.jsp" >Forget Password</a>
             </div>
         </div>
-        <p style="color: red"> ${role} </p>
+        <%--<p style="color: red"> ${role} </p>--%>
         <p style="color: red"> ${message1} </p>
         <button type="submit" class="btn btn-primary btn-block">Login</button>
         <div class="text-center mt-3">

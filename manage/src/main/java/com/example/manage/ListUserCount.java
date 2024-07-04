@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "list_user", value = "/list_user")
-public class ListUser extends HttpServlet {
+@WebServlet(name = "ListUserCount", value = "/ListUserCount")
+public class ListUserCount extends HttpServlet{
     private static final long serialVersionUID = 1L;
     private Dao dao;
 
@@ -20,31 +20,15 @@ public class ListUser extends HttpServlet {
         dao = new Dao();
     }
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String index =  req.getParameter("index");
-
-        if(index == null) {
-            index = "1";
-        }
-
-        try{
-
-                List<user> user = dao.GetByIndex(Integer.parseInt(index));
-
-            int count = dao.getTotalUser();
-            int endPage = count/3;
-            if(count % 3 != 0){
-                endPage++;
-            }
-
-            req.setAttribute("endP", endPage);
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {/*
+         String index =  req.getParameter("index");
+        try {
+            List<user> user = dao.GetByIndex(Integer.parseInt(index));
             req.setAttribute("users", user);
-            req.setAttribute("tag", index);
             req.getRequestDispatcher("adminUser.jsp").forward(req, resp);
-        }catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        }
-
+        }*/
     }
 
     @Override

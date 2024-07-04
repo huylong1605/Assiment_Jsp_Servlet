@@ -22,9 +22,34 @@ public class ListProduct extends HttpServlet {
     }
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        /*String category_name = req.getParameter("category_name");*/
+//https://chatgpt.com/share/8af5abd6-5bff-45b0-9d65-a31ccdf88868
+        String index =  req.getParameter("index");
+        List<product> products;
+
+        if(index == null) {
+            index = "1";
+        }
         try{
-            List<product> products = dao.getAllProduct();
+            /*if(category_name != null) {*/
+                /*products = dao.GetFilterProduct(Integer.parseInt(index), category_name);*/
+
+
+           /* }else {*/
+                products = dao.GetProductByIndex(Integer.parseInt(index));
+            /*}*/
+
+
+               int count = /*dao.getTotalProduct(category_name);*/ dao.getTotalProduct();
+
+            int endPage = count/4;
+            if(count % 4 != 0){
+                endPage++;
+            }
+            /*List<product> products = dao.getAllProduct();*/
+            req.setAttribute("endP", endPage);
             req.setAttribute("products", products);
+            req.setAttribute("tag", index);
             List<category> categories = dao.getAllCategory();
             req.setAttribute("categoryy", categories);
             req.getRequestDispatcher("HomeShop.jsp").forward(req, resp);

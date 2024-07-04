@@ -36,21 +36,18 @@ public class Login extends HttpServlet {
         try {
             user user = dao.getUser(username, password);
             if (user != null) {
-                /*HttpSession session = req.getSession();
-                session.setAttribute("user", user); // Lưu user vào session*/
+                HttpSession session = req.getSession();
+                session.setAttribute("role", user); // Lưu user vào session
+                //session.setMaxInactiveInterval(100);
 
                 if (user.getRole().equals("admin")) {
-                    req.getRequestDispatcher("/admin.jsp").forward(req, resp);
-                    /*resp.sendRedirect("list_user");*/
+                   /* req.getRequestDispatcher("/admin.jsp").forward(req, resp);*/
+                    resp.sendRedirect("admin.jsp");
                 } else if (user.getRole().equals("user")) {
                     resp.sendRedirect("ListProduct");
 
-                } else if(user.getRole().equals(" ")){
-                    // Xử lý trường hợp role không hợp lệ (nếu cần)
-
-                    req.setAttribute("Role", "Admin chưa phân role cho bạn, hãy đợi duyệt");
-                    req.getRequestDispatcher("/login.jsp").forward(req, resp);
                 }
+
             } else {
                 req.setAttribute("username", username);
                 req.setAttribute("password", password);

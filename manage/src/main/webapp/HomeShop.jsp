@@ -34,13 +34,26 @@
                         <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
                     </ul>
                 </li>
+
             </ul>
+
+
             <form class="d-flex">
-                <button class="btn btn-outline-dark" type="submit">
-                    <i class="bi-cart-fill me-1"></i>
-                    Cart
-                    <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                </button>
+
+                <div class="d-flex align-items-center me-3">
+                     <c:if test="${sessionScope.role != null}">
+                    <span class="me-2">${sessionScope.role.userName}</span>
+                    <a class="btn btn-outline-dark" href="logout">Logout</a>
+                     </c:if>
+                </div>
+
+                <div class="d-flex align-items-center me-3">
+                    <a class="nav-link" href="CartList">
+                        <i class="bi-cart-fill"></i>
+                        Cart
+                        <span class="badge bg-dark text-white rounded-pill">${cartItemCount}</span>
+                    </a>
+                </div>
             </form>
         </div>
     </div>
@@ -58,10 +71,10 @@
 <!-- Section-->
 <section class="py-5">
 
-    <form class="d-flex" method="get" action="">
+    <form class="d-flex" method="get" action="ListProduct">
         <!-- Brand Combo Box -->
-        <select class="form-select me-2" style=" width: 150px; margin-left: 120px;" id="category_name" name="category_name">
-            <option value="">Select Brand</option>
+        <select class="form-select me-2" style=" width: 150px; margin-left: 120px;"  name="category_name">
+            <option value="AllLList">Select Brand</option>
             <c:forEach var="c" items="${categoryy}">
                 <option value="${c.category_name}">${c.category_name}</option>
             </c:forEach>
@@ -90,7 +103,7 @@
                     </div>
                     <!-- Product actions-->
                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="productDetail?id=${productc.product_id}">View Detail Product</a></div>
                     </div>
                 </div>
             </div>
@@ -98,6 +111,21 @@
             </c:forEach>
 
         </div>
+    </div>
+    <div class="container">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <c:forEach begin="1" end="${endP}" var="i">
+                    <li class="page-item" >
+
+                        <a  class="page-link ${tag == i ? "active" : " "}" href="ListProduct?<%--category_name=${param.category_name}&--%>index=${i}">${i}</a>
+
+                    </li>
+
+                </c:forEach>
+
+            </ul>
+        </nav>
     </div>
 
 

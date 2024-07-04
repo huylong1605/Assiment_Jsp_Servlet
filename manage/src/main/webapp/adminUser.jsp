@@ -7,8 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User List</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="pageUserAdmin.css" type="text/css">
     <script src="User.js" defer></script>
+
 </head>
+
 <body>
 <div class="container mt-5">
     <h2 class="mb-4">User List</h2>
@@ -52,6 +55,23 @@
         </c:forEach>
         </tbody>
     </table>
+    <div class="container">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <c:forEach begin="1" end="${endP}" var="i">
+                    <li class="page-item" >
+
+                        <a  class="page-link ${tag == i ? "active" : " "}" href="list_user?index=${i}">${i}</a>
+
+                    </li>
+
+                </c:forEach>
+
+            </ul>
+        </nav>
+    </div>
+    <br>
+    <a  href="admin.jsp" class="btn btn-primary">Back to Admin</a>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
