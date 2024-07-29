@@ -25,13 +25,13 @@ public class searchUser extends HttpServlet {
         String searchUser = req.getParameter("searchUser");
 
 
-        try {
+     /*   try {
             List<user> users = dao.getUserByUsername(searchUser);
             req.setAttribute("users", users);
             req.getRequestDispatcher("adminUser.jsp").forward(req, resp);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     @Override

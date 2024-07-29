@@ -31,9 +31,13 @@ public class Dao {
 
     private static final String SELECT_User_BY_ID = "SELECT * FROM user WHERE id = ?";
     private static final String Edit_user = "UPDATE user SET username = ?, password = ?, sdt = ?, role = ? WHERE id = ?";
-    private static final String  SELECT_USER_BY_USERNAME = "SELECT * FROM user WHERE username LIKE ?";
+    /*private static final String  SELECT_USER_BY_USERNAME = "SELECT * FROM user WHERE username LIKE ?";*/
+    private static final String  SELECT_USER_BY_USERNAME = "SELECT * FROM  manager.user  where username LIKE ? ORDER BY id \n" +
+            "                          LIMIT 3 OFFSET ?;";
 
     private static final String SELECT_Count_User = "SELECT count(*) FROM user";
+
+    private static final String SELECT_Count_User_USERNAME = "SELECT COUNT(*)  FROM manager.user where username like ?";
 
 
     /*------------------Category-------------------------------------*/
@@ -49,10 +53,11 @@ public class Dao {
 
 
     private static final String SELECT_Product_Detail = "SELECT * FROM product where product_id = ?";
-    /*private static final String SELECT_Count_Product = "SELECT COUNT(*)  FROM manager.product p\n" +
+    private static final String SELECT_Count_Product_filter = "SELECT COUNT(*)  FROM manager.product p\n" +
             "JOIN manager.category c ON p.category_id = c.category_id \n" +
-            "WHERE c.category_name = ?";*/
+            "WHERE c.category_name = ?";
     private static final String SELECT_Count_Product = "SELECT COUNT(*)  FROM manager.product";
+
 
     private static final String SELECT_Filter_product = "SELECT P.* FROM  manager.product p join manager.category c on p.category_id = c.category_id where c.category_name = ?\n" +
             "                      ORDER BY product_id\n" +
@@ -73,6 +78,10 @@ public class Dao {
     private static final String SELECT_Cart_List = "SELECT a.cart_id, a.quantity, a.added_at, p.product_name, p.price, p.description, c.category_name  FROM manager.addTocart as a join manager.product as p \n" +
             "join manager.category as c on a.product_id = p.product_id and p.category_id = c.category_id where a.user_id = ?";
 
+    private static final String DELETE_CART = "DELETE FROM manager.addtocart WHERE cart_id = ?";
+    private static final String COUNT_CART = "select count(*) from manager.addtocart a join manager.product p on a.product_id = p.product_id where a.user_id = ?";
+
+    private static final String SELECT_TOTAL_PRICE = "select sum(p.price) as totalPrice from manager.addtocart a join manager.product p on a.product_id = p.product_id where a.user_id = ?";
 
 
     public boolean checkUsernameExists(String username) throws ClassNotFoundException {
@@ -345,7 +354,7 @@ public class Dao {
             printSQLException(e);
         }
     }
-    public List<user> getUserByUsername(String username) throws ClassNotFoundException {
+    public List<user> getUserByUsername(int index, String username) throws ClassNotFoundException {
         List<user> users = new ArrayList<>();
 
         Class.forName(JDBC_DRIVER);
@@ -353,6 +362,7 @@ public class Dao {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_USERNAME)) {
             preparedStatement.setString(1, "%" + username + "%");
+            preparedStatement.setInt(2, (index-1)*3);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -416,6 +426,37 @@ public class Dao {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_Count_Product)) {
             /*preparedStatement.setString(1, category_name);*/
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                total = resultSet.getInt(1);  // Corrected column index
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
+    public int getTotalProduct(String category_name) throws ClassNotFoundException {
+        Class.forName(JDBC_DRIVER);
+        int total = 0;
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_Count_Product_filter)) {
+            preparedStatement.setString(1, category_name);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                total = resultSet.getInt(1);  // Corrected column index
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
+
+    public int getTotalUserUsername(String category_name) throws ClassNotFoundException {
+        Class.forName(JDBC_DRIVER);
+        int total = 0;
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_Count_User_USERNAME)) {
+            preparedStatement.setString(1, "%" +category_name+"%");
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 total = resultSet.getInt(1);  // Corrected column index
@@ -594,6 +635,49 @@ public List<user> GetByIndex(int index) throws ClassNotFoundException{
         return CartList;
     }
 
+    public void deleteCart(int id) throws ClassNotFoundException {
+        Class.forName(JDBC_DRIVER);
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_CART)) {
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
+    }
+
+    public double getTotalPrice(int userId) throws ClassNotFoundException {
+        Class.forName(JDBC_DRIVER);
+        double total = 0;
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_TOTAL_PRICE)) {
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                total = resultSet.getDouble(1);  // Corrected column index
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
+
+    public int getTotalCart(int userId) throws ClassNotFoundException {
+        Class.forName(JDBC_DRIVER);
+        int total = 0;
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(COUNT_CART)) {
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                total = resultSet.getInt(1);  // Corrected column index
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
     private void printSQLException(SQLException ex) {
         for (Throwable e : ex) {
             if (e instanceof SQLException) {

@@ -16,7 +16,7 @@
 <div class="container mt-5">
     <h2 class="mb-4">User List</h2>
     <div class="d-flex justify-content-between mb-3">
-        <form class="d-flex" action="SearchUser" method="get">
+        <form class="d-flex" action="list_user" method="get">
             <input class="form-control me-2" type="search" placeholder="searchUser" id="searchUser" name="searchUser" value="${param.searchUser}" aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
@@ -61,7 +61,7 @@
                 <c:forEach begin="1" end="${endP}" var="i">
                     <li class="page-item" >
 
-                        <a  class="page-link ${tag == i ? "active" : " "}" href="list_user?index=${i}">${i}</a>
+                        <a  class="page-link ${tag == i ? "active" : " "}" href="list_user?searchUser=${param.searchUser}&index=${i}">${i}</a>
 
                     </li>
 

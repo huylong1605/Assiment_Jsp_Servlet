@@ -29,7 +29,9 @@ public class CartList extends HttpServlet {
         user currentUser = (user) session.getAttribute("role");
         try {
             List<CartItem> CI = dao.getAllCart(currentUser.getId());
+            double totalPrice = dao.getTotalPrice(currentUser.getId());
             req.setAttribute("CartList", CI);
+            req.setAttribute("totalPrices", totalPrice);
             req.getRequestDispatcher("addToCart.jsp").forward(req, resp);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

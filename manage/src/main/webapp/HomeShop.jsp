@@ -12,8 +12,18 @@
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <!-- Bootstrap icons-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="CssHomeShop.css" rel="stylesheet" />
+    <STYLE>
+        .nav-link .badge {
+            font-size: 0.75rem; /* Kích thước chữ của số lượng sản phẩm */
+            padding: 0.3em 0.6em; /* Khoảng cách bên trong của số lượng sản phẩm */
+            transform: translate(-50%, -50%); /* Định vị lại số lượng sản phẩm */
+            top: 20%; /* Điều chỉnh vị trí dọc */
+            left: 70%; /* Điều chỉnh vị trí ngang */
+        }
+    </STYLE>
 </head>
 <body>
 <!-- Navigation-->
@@ -48,10 +58,13 @@
                 </div>
 
                 <div class="d-flex align-items-center me-3">
-                    <a class="nav-link" href="CartList">
-                        <i class="bi-cart-fill"></i>
+                    <a class="nav-link position-relative" href="CartList">
+                        <i class="bi bi-cart-fill" style="font-size: 1.5rem; margin-right: 5px;"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark"
+                              style="font-size: 0.75rem; padding: 0.3em 0.6em;">
+                            ${countCart}
+                        </span>
                         Cart
-                        <span class="badge bg-dark text-white rounded-pill">${cartItemCount}</span>
                     </a>
                 </div>
             </form>
@@ -71,10 +84,10 @@
 <!-- Section-->
 <section class="py-5">
 
-    <form class="d-flex" method="get" action="ListProduct">
+    <%--<form class="d-flex" method="get" action="ListProduct">
         <!-- Brand Combo Box -->
         <select class="form-select me-2" style=" width: 150px; margin-left: 120px;"  name="category_name">
-            <option value="AllLList">Select Brand</option>
+            <option value="All">Select Brand</option>
             <c:forEach var="c" items="${categoryy}">
                 <option value="${c.category_name}">${c.category_name}</option>
             </c:forEach>
@@ -82,8 +95,21 @@
         </select>
 
         <button class="btn btn-outline-dark" type="submit">Filter</button>
-    </form>
+    </form>--%>
 
+        <div class="categories">
+
+            <form class="d-flex" action="ListProduct" method="get">
+                <select class="form-select me-2" style=" width: 150px; margin-left: 120px;" name="category_name" onchange="this.form.submit()">
+                    <option value="">All Categories</option>
+                    <c:forEach var="category" items="${categoryy}">
+                        <option value="${category.category_name}" ${param.category_name == category.category_name ? 'selected' : ''}>${category.category_name}</option>
+                    </c:forEach>
+                </select>
+
+
+            </form>
+        </div>
 
     <div class="container px-4 px-lg-5 mt-5">
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
@@ -118,7 +144,7 @@
                 <c:forEach begin="1" end="${endP}" var="i">
                     <li class="page-item" >
 
-                        <a  class="page-link ${tag == i ? "active" : " "}" href="ListProduct?<%--category_name=${param.category_name}&--%>index=${i}">${i}</a>
+                        <a  class= "page-link ${tag == i ? "active" : " "}" href="ListProduct?category_name=${param.category_name}&index=${i}">${i}</a>
 
                     </li>
 
